@@ -9,6 +9,7 @@
 #include "Settings.hpp"
 #include <QtCore/QDebug>
 #include <QtCore/QThread>
+#include <QTime>
 
 void QemuManager::start(){
     qDebug() << "QemuManager::QemuManager(): creating qemu process";
@@ -23,6 +24,7 @@ void QemuManager::start(){
     qemuArguments << "-M" << "versatilepb" << "-kernel" << settings.getBinaryPath() << "-nographic";
 
     qDebug() << "QemuManager::QemuManager(): Qemu arguments: " << qemuArguments.join(' ');
+    qDebug() << "QemuManager::QemuManager(): Qemu path: " << settings.getQemuPath();
 
     qDebug() << "QemuManager::QemuManager(): starting qemu process ";
     mQemuProcess->start(settings.getQemuPath(), qemuArguments);
@@ -37,12 +39,13 @@ void QemuManager::dataRedyToRead(){
     QByteArray readOutput = mQemuProcess->readAllStandardOutput();
     mReadOutput.append(readOutput);
 
-    qDebug() << "QemuManager::dataRedyToRead(): input buffer size: " << mReadOutput.size();
-    qDebug() << "QemuManager::dataRedyToRead(): IMAGE_SIZE_BYTES: " << ImageData::IMAGE_SIZE_BYTES;
-    qDebug() << "QemuManager::dataRedyToRead(): " << readOutput;
-
     if(mReadOutput.size() >= ImageData::IMAGE_SIZE_BYTES){
-        qDebug() << "new Image available!";
+        static QTime timeMeasurement;
+        auto milliseconds =  timeMeasurement.restart();
+        auto seconds = milliseconds/1000.0f;
+        auto fps = 1/seconds;
+        qDebug() << "currentFPS: " << fps;
+
         ImageData imgData;
         imgData.initFromData(mReadOutput.data());
         QByteArray restBytes(mReadOutput.data()+ImageData::IMAGE_SIZE_BYTES, mReadOutput.size() - ImageData::IMAGE_SIZE_BYTES);

@@ -10,8 +10,13 @@
 
 class Settings {
 public:
+    Settings();
     QString getQemuPath();
     QString getBinaryPath();
+
+private:
+    QString mQemuPath;
+    QString mBinaryPath;
 };
 
 

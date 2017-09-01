@@ -56,6 +56,11 @@ void MainWindow::displayGreetings() {
 }
 
 void MainWindow::newInput(int newValue) {
+    if(newValue > ImageData::MAX_VALUE){
+        newValue = ImageData::MAX_VALUE;
+    } else if (newValue < ImageData::MIN_VALUE) {
+        newValue = ImageData::MIN_VALUE;
+    }
     mQemu->writeNewValue(newValue);
 }
 

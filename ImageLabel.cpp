@@ -6,6 +6,7 @@
 #include "Data2PixmapAdapter.hpp"
 #include <QMouseEvent>
 #include <iostream>
+#include <QDebug>
 
 void ImageLabel::mousePressEvent(QMouseEvent *event) {
     QLabel::mousePressEvent(event);
@@ -13,7 +14,7 @@ void ImageLabel::mousePressEvent(QMouseEvent *event) {
 
     if(relativePoint.x() < 0.05f){
         mMousePressed=true;
-        auto newResult = relativePoint.y() * ImageData::MAX_VALUE - ImageData::MAX_VALUE/2;
+        auto newResult = relativePoint.y() * ImageData::IMAGE_HEIGHT - ImageData::MAX_VALUE;
         Q_EMIT newInputValue(static_cast<int>(newResult));
     }
 }
@@ -34,13 +35,8 @@ QPointF ImageLabel::getPositionFromEvent(const QMouseEvent *event) {
 }
 
 void ImageLabel::mouseMoveEvent(QMouseEvent *event) {
-    if(mMousePressed){
-        auto relativePoint = getPositionFromEvent(event);
-        auto newResult = relativePoint.y() * ImageData::IMAGE_HEIGHT - ImageData::IMAGE_HEIGHT/2;
-        Q_EMIT newInputValue(static_cast<int>(newResult));
-    } else {
+    if(not mMousePressed)
         QLabel::mouseMoveEvent(event);
-    }
 }
 
 void ImageLabel::setImageData(const ImageData& data) {
