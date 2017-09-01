@@ -13,6 +13,7 @@ public:
     static constexpr uint32_t IMAGE_WIDTH=256;
     static constexpr uint32_t IMAGE_HEIGHT=128;
     static constexpr uint32_t IMAGE_SIZE=IMAGE_WIDTH*IMAGE_HEIGHT/32;
+    static constexpr uint32_t IMAGE_SIZE_BYTES=IMAGE_WIDTH*IMAGE_HEIGHT/8;
     static constexpr int32_t MAX_BAR_X_OFFSET = 10;
     static constexpr int32_t MIN_VALUE = -63;
     static constexpr int32_t MAX_VALUE = 64;
@@ -22,8 +23,10 @@ public:
     void clearPixel(uint32_t width, uint32_t height);
     void changePixel(uint32_t width, uint32_t height);
     bool getPixel(uint32_t width, uint32_t height)const;
-
     void setInput(int32_t newValue);
+
+    void initFromData(char* data);
+    char* data();
 private:
     //helpers
     void getOffsets(uint32_t width, uint32_t height, uint32_t &dWordOffset, uint32_t &bitInDWord) const;

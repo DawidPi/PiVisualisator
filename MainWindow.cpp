@@ -7,21 +7,35 @@
 #include <QtCore/QTimer>
 #include <QMouseEvent>
 #include <iostream>
-#include <unitypes.h>
 #include "MainWindow.hpp"
 #include "ImageData.hpp"
 #include "Data2PixmapAdapter.hpp"
+#include <QDebug>
 
 
 MainWindow::MainWindow() : QMainWindow(nullptr) {
     setWindowTitle("PiOS Visualisator");
 
+    qDebug() << "MainWindow::MainWindow()";
     mImageLabel = new ImageLabel;
     mImageLabel->setScaledContents(true);
     setCentralWidget(mImageLabel);
+    qDebug() << "MainWindow::MainWindow(): image label created";
     displayGreetings();
 
+    qDebug() << "MainWindow::MainWindow(): connect ImageLabel(newInputValue) -> MainWindow(newInput)";
     connect(mImageLabel, &ImageLabel::newInputValue, this, &MainWindow::newInput);
+
+    qDebug() << "MainWindow::MainWindow(): Creating Qemu manager";
+    mQemu = new QemuManager(this);
+
+    qDebug() << "MainWindow::MainWindow(): connect QemuManager(newInputValueAccepted) -> MainWindow(newInputSent)";
+    connect(mQemu, &QemuManager::newInputValueAccepted, this, &MainWindow::newInputSent);
+    qDebug() << "MainWindow::MainWindow(): connect QemuManager(newDataArrived) -> MainWindow(newImageDataAvailable)";
+    connect(mQemu, &QemuManager::newDataArrived, this, &MainWindow::newImageDataAvailable);
+
+    qDebug() << "MainWindow::MainWindow(): starting Qemu";
+    mQemu->start();
 }
 
 void MainWindow::displayGreetings() {
@@ -42,6 +56,12 @@ void MainWindow::displayGreetings() {
 }
 
 void MainWindow::newInput(int newValue) {
-    mCurrentImage.setInput(newValue);
-    mImageLabel->setPixmap(QPixmap(Data2PixmapAdapter().convert(mCurrentImage)));
+    mQemu->writeNewValue(newValue);
+}
+
+void MainWindow::newInputSent(int newValue) {
+}
+
+void MainWindow::newImageDataAvailable(ImageData data) {
+    mImageLabel->setImageData(data);
 }

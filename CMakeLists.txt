@@ -14,7 +14,7 @@ add_definitions(-DQT_NO_KEYWORDS)
 set(SOURCES
         main.cpp
         MainWindow.cpp
-        MainWindow.hpp Data2PixmapAdapter.cpp Data2PixmapAdapter.hpp ImageData.cpp ImageData.hpp ImageLabel.cpp ImageLabel.hpp QemuManager.cpp QemuManager.hpp)
+        MainWindow.hpp Data2PixmapAdapter.cpp Data2PixmapAdapter.hpp ImageData.cpp ImageData.hpp ImageLabel.cpp ImageLabel.hpp QemuManager.cpp QemuManager.hpp Settings.cpp Settings.hpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 qt5_use_modules(${PROJECT_NAME} Widgets Core)

@@ -228,3 +228,17 @@ void ImageData::clearInputArea() {
         }
     }
 }
+
+void ImageData::initFromData(char *data) {
+    char* thisBegin= reinterpret_cast<char *>(mData.data());
+    auto thisEnd=thisBegin + IMAGE_SIZE_BYTES;
+
+    for(char* currentByte=thisBegin; currentByte < thisEnd; ++currentByte){
+        *currentByte = *data;
+        data++;
+    }
+}
+
+char *ImageData::data() {
+    return reinterpret_cast<char *>(mData.data());
+}

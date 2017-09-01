@@ -9,6 +9,7 @@
 #include <QtWidgets/QMainWindow>
 #include "ImageData.hpp"
 #include "ImageLabel.hpp"
+#include "QemuManager.hpp"
 
 class QLabel;
 class QTimer;
@@ -21,12 +22,16 @@ public:
 
 private:
     ImageLabel* mImageLabel;
+    QemuManager* mQemu;
     ImageData mCurrentImage;
 
     void displayGreetings();
     void newInput(int newValue);
 
-    Q_SLOTS
+private Q_SLOTS:
+    void newInputSent(int newValue);
+    void newImageDataAvailable(ImageData data);
+
 };
 
 
